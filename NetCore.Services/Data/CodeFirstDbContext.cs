@@ -9,6 +9,10 @@ namespace NetCore.Services.Data
     /// </summary>
     public class CodeFirstDbContext : DbContext
     {
+        /// <summary>
+        /// 생성자 상속
+        /// </summary>
+        /// <param name="options"></param>
         public CodeFirstDbContext(DbContextOptions<CodeFirstDbContext> options) : base(options)
         {
             
@@ -28,9 +32,10 @@ namespace NetCore.Services.Data
             modelBuilder.Entity<User>(e =>
             {
                 e.Property(c => c.IsMembershipWithdrawn).HasDefaultValue(value: false);
+                //e.Property(c => c.JoinedUtcDate).HasDefaultValue(value: DateTime.UtcNow); 실제 동작 안됨
             });
             // 인덱스 지정
-            modelBuilder.Entity<User>().HasIndex(c => new {c.UserEmail});
+            modelBuilder.Entity<User>().HasIndex(c => new {c.UserEmail}).IsUnique(unique:true);
         }
     }
 }
