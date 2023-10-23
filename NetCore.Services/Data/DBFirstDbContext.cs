@@ -1,17 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using NetCore.Data.DataModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using NetCore.Data.Classes;
 
 namespace NetCore.Services.Data
 {
     public class DBFirstDbContext : DbContext
     {
-        public DBFirstDbContext(DbContextOptions<DBFirstDbContext> options) : base(options)
+        public DBFirstDbContext(DbContextOptions<DBFirstDbContext> options) : 
+            base(options)
         {
+
         }
 
         //DB테이블 리스트 지정

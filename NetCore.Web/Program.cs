@@ -1,13 +1,12 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using NetCore.Services.Data;
 using NetCore.Services.Interfaces;
 using NetCore.Services.Svcs;
-using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
-string connString = builder.Configuration.GetConnectionString(name:"DefaultConnection");
+string defaultConnString = builder.Configuration.GetConnectionString(name:"DefaultConnection");
+string dbFirstConnString = builder.Configuration.GetConnectionString(name: "DBFirstDBConnection");
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
@@ -18,9 +17,11 @@ builder.Services.AddScoped<IUser, UserService>();
 // 데이터베이스 접속 정보, Migration 프로젝트를 지정
 builder.Services.AddDbContext<CodeFirstDbContext>(options =>
 {
-    options.UseSqlServer(connectionString: connString,
-        sqlServerOptionsAction:mig => mig.MigrationsAssembly(assemblyName: "NetCore.Migrations"));
+    options.UseSqlServer(connectionString: defaultConnString,
+        sqlServerOptionsAction: mig => mig.MigrationsAssembly(assemblyName: "NetCore.Migrations"));
 });
+builder.Services.AddDbContext<DBFirstDbContext>(options =>
+        options.UseSqlServer(connectionString: dbFirstConnString));
 #endregion
 
 var app = builder.Build();

@@ -19,6 +19,8 @@ namespace NetCore.Services.Data
         }
         // DB 테이블 리스트 지정
         public DbSet<User> Users { get; set; }
+        public DbSet<UserRole> UserRoles { get; set; }
+        public DbSet<UserRolesByUser> UserRolseByUsers { get; set; }
         // Method 상속
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -26,6 +28,8 @@ namespace NetCore.Services.Data
             // 4가지 작업
             // Db 테이블 이름 변경
             modelBuilder.Entity<User>().ToTable(name: "User");
+            modelBuilder.Entity<UserRole>().ToTable(name: "UserRole");
+            modelBuilder.Entity<UserRolesByUser>().ToTable(name: "UserRolesByUser");
             // 복합키 지정
             modelBuilder.Entity<UserRolesByUser>().HasKey(c => new { c.UserId, c.RoleId });
             // 컬럼 기본값 지정
