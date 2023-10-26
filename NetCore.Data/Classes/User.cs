@@ -9,7 +9,6 @@ namespace NetCore.Data.Classes
         public string UserName { get; set; }
         public string? Password { get; set; }
         public string UserEmail { get; set; }
-        public int AccessFailedCount { get; set; }
         public bool IsMembershipWithdrawn { get; set; }
         public System.DateTime JoinedUtcDate { get; set; }        
         

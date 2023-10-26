@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetCore.Data", "NetCore.Dat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetCore.Migrations", "NetCore.Migrations\NetCore.Migrations.csproj", "{17D4CE37-EAB3-48F7-8173-EAB4A54BB5C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetCore.Databases", "NetCore.Databases\NetCore.Databases.csproj", "{8FD2D884-7282-4513-A8F2-53E70403D9DD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetCore.Databases", "NetCore.Databases\NetCore.Databases.csproj", "{5A25B8DA-37B2-40F3-B50F-2D3D70DA1976}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +35,10 @@ Global
 		{17D4CE37-EAB3-48F7-8173-EAB4A54BB5C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17D4CE37-EAB3-48F7-8173-EAB4A54BB5C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17D4CE37-EAB3-48F7-8173-EAB4A54BB5C5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8FD2D884-7282-4513-A8F2-53E70403D9DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8FD2D884-7282-4513-A8F2-53E70403D9DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8FD2D884-7282-4513-A8F2-53E70403D9DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8FD2D884-7282-4513-A8F2-53E70403D9DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A25B8DA-37B2-40F3-B50F-2D3D70DA1976}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A25B8DA-37B2-40F3-B50F-2D3D70DA1976}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A25B8DA-37B2-40F3-B50F-2D3D70DA1976}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A25B8DA-37B2-40F3-B50F-2D3D70DA1976}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
