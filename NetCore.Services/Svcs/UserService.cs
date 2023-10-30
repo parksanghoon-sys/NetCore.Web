@@ -39,12 +39,22 @@ namespace NetCore.Services.Svcs
             //               .FirstOrDefault();
 
             // FUNCTION
-            //user = _dbFirstDbContext.Users.FromSqlRaw<User>($"SELECT UserId, UserName,UserEmail,Password,IsMembershipWithdrawn,JoinedUtcDate FROM dbo.ufnUser('{userId}','{password}')")
+            //user = _dbFirstDbContext.Users.FromSqlInterpolated<User>($"SELECT UserId, UserName,UserEmail,Password,IsMembershipWithdrawn,JoinedUtcDate FROM dbo.ufnUser('{userId}','{password}')")
             //                .FirstOrDefault();
 
             // STORED PROCEDURE
             user = _dbFirstDbContext.Users.FromSqlRaw<User>("dbo.uspCheckLoginByUserId @p0, @p1", new[] { userId, password })
                 .AsEnumerable().ToList().FirstOrDefault();
+            if(user == null)
+            {
+                // 접속 실패 횟수에 대한 증가
+                int rowAffected;
+                // SQL 문 직접 작성
+                //rowAffected = _dbFirstDbContext.Database.ExecuteSqlInterpolated($"Update dbo.[User] Set AccessFailedCount +=1 WHERE UserId={userId}");
+                // STORED PROCEDURE
+                rowAffected = _dbFirstDbContext.Database.ExecuteSqlRaw($"dbo.FailedLoginByUserId @p0",parameters: new[] {userId});
+
+            }
 
             return user;
         }
