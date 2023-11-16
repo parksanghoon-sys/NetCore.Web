@@ -16,6 +16,7 @@ namespace NetCore.Data.ViewModels
         [Required(ErrorMessage = "비밀번호를 입력하세요")]
         [Display(Name = "비밀번호")]
         [MinLength(6, ErrorMessage = "비밀번호는 최소 6자 이상 입력하세요")]
+        [DataType(DataType.Password)]
         public string Password { get; set; }
     }
 }

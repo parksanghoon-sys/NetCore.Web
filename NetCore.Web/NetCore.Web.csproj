@@ -23,6 +23,7 @@
     <ProjectReference Include="..\NetCore.Data\NetCore.Data.csproj" />
     <ProjectReference Include="..\NetCore.Migrations\NetCore.Migrations.csproj" />
     <ProjectReference Include="..\NetCore.Services\NetCore.Services.csproj" />
+    <ProjectReference Include="..\NetCore.Utilites\NetCore.Utilites.csproj" />
   </ItemGroup>
 
 </Project>
