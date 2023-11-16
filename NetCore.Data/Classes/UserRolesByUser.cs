@@ -9,7 +9,7 @@ namespace NetCore.Data.Classes
 
         [Key]
         public string RoleId { get; set; }
-        public System.DateTime OwnedUtcDate { get; set; }
+        public System.DateTime OwnUtcDate { get; set; }
 
         public virtual User User { get; set; }
         public virtual UserRole UserRole { get; set; }

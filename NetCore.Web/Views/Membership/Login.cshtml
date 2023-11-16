@@ -27,7 +27,13 @@
             <div class="form-group">
                 <button type="submit" name="btnLogin" class="btn btn-lg btn-success btn-block">맴버쉽 로그인</button>
             </div>
-
+            <div class="checkbox"> 
+                <label asp-for="RememberMe">
+                    <input type="checkbox" asp-for="RememberMe" placeholder="Remember me"/>
+                    @Html.DisplayNameFor(m => m.RememberMe)
+                </label>
+                <span class="text-danger" asp-validation-for="RememberMe"></span>
+            </div>
             <p>
                 <a asp-action="Register" asp-controller="Account">Register as a new user</a>
             </p>

@@ -5,6 +5,7 @@ using NetCore.Data.Classes;
 //using NetCore.Data.DataModels;
 using NetCore.Services.Interfaces;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Data.Entity;
 
 namespace NetCore.Services.Svcs
 {
@@ -29,9 +30,9 @@ namespace NetCore.Services.Svcs
             //user = _codeFirstDbContext.Users.Where(u => u.UserId.Equals(userId) && u.Password.Equals(password)).FirstOrDefault();
 
             // FromSql
-            //user = _dbFirstDbContext.Users.FromSqlRaw<User>("SELECT UserId, UserName,UserEmail,Password,IsMembershipWithdrawn,JoinedUtcDate FROM dbo.[User]")
-            //                .Where(u => u.UserId.Equals(userId) && u.Password.Equals(password))
-            //               .FirstOrDefault();
+            user = _dbFirstDbContext.Users.FromSqlRaw<User>("SELECT * FROM dbo.[User]")
+                            .Where(u => u.UserId.Equals(userId) && u.Password.Equals(password))
+                           .FirstOrDefault();
 
             // View
             //user = _dbFirstDbContext.Users.FromSqlRaw<User>("SELECT UserId, UserName,UserEmail,Password,IsMembershipWithdrawn,JoinedUtcDate FROM dbo.[uvwUser]")
@@ -43,8 +44,8 @@ namespace NetCore.Services.Svcs
             //                .FirstOrDefault();
 
             // STORED PROCEDURE
-            user = _dbFirstDbContext.Users.FromSqlRaw<User>("dbo.uspCheckLoginByUserId @p0, @p1", new[] { userId, password })
-                .AsEnumerable().ToList().FirstOrDefault();
+            //user = _dbFirstDbContext.Users.FromSqlRaw<User>("dbo.uspCheckLoginByUserId @p0, @p1", new[] { userId, password })
+            //    .AsEnumerable().ToList().FirstOrDefault();
             if(user == null)
             {
                 // 접속 실패 횟수에 대한 증가
@@ -78,6 +79,32 @@ namespace NetCore.Services.Svcs
         {
             //return GetUserInfos().Where(u => u.UserId!.Equals(userid) && u.Password.Equals(password)).Any();
             return GetUserInfo(userid, password) != null ? true : false;
+        }
+        private User GetUserInfo(string userid)
+        {
+            return _dbFirstDbContext.Users.Where(u => u.UserId.Equals(userid)).FirstOrDefault();
+        }
+        private IEnumerable<UserRolesByUser> GetUserRolesByUserInfos(string userId)
+        {
+            var userRolesByUserInfos = _dbFirstDbContext.UserRolesByUsers.Where(uru => uru.UserId.Equals(userId)).ToList();
+            foreach (var role in userRolesByUserInfos)
+            {
+                role.UserRole = GetUserRole(role.UserId);
+            }
+            return userRolesByUserInfos.OrderByDescending(uru => uru.UserRole.RolePriority);
+        }
+        private UserRole GetUserRole(string roleId)
+        {
+            return _dbFirstDbContext.UserRoles.Where(ur => ur.RoleId.Equals(roleId)).FirstOrDefault();
+        }
+        User IUser.GetUserInfo(string userid)
+        {
+            return GetUserInfo(userid);
+        }
+
+        public IEnumerable<UserRolesByUser> GetRolesOwneByUser(string userid)
+        {
+            return GetUserRolesByUserInfos(userid);
         }
         #endregion
     }

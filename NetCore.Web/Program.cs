@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using NetCore.Services.Data;
@@ -28,6 +29,20 @@ builder.Services.AddDbContext<CodeFirstDbContext>(options =>
 });
 builder.Services.AddDbContext<DBFirstDbContext>(options =>
         options.UseSqlServer(connectionString: dbFirstConnString));
+
+//// 닷넷코어는 MVC 패턴을 사용하기 위해 의존성 주입을 사용해야하기 떄문에 MVC 서비스를 등록
+//builder.Services.AddMvc();
+builder.Services.AddControllersWithViews();
+// 신원 보증과 승인 권한
+builder.Services.AddAuthentication(defaultScheme: CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.AccessDeniedPath = "/Membership/Forbidden";
+        options.LogoutPath = "/Membership/Login";
+    });
+builder.Services.AddAuthorization();
+builder.Services.AddHttpContextAccessor();
+
 #endregion
 
 var app = builder.Build();
@@ -38,13 +53,17 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
+    
 }
-
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+////강의내용
+//신원보증만
+app.UseAuthentication();
 
+// 승인권한을 사용하기 위해 추가됨.
 app.UseAuthorization();
 
 app.MapControllerRoute(
