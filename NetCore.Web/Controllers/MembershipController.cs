@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NetCore.Data.ViewModels;
 using NetCore.Services.Interfaces;
@@ -8,6 +9,7 @@ using System.Security.Claims;
 
 namespace NetCore.Web.Controllers
 {
+    [Authorize(Roles = "")]
     public class MembershipController : Controller
     {
         private readonly IUser? _user;
@@ -55,16 +57,24 @@ namespace NetCore.Web.Controllers
                     var userInfo = _user.GetUserInfo(loginInfo.UserId);
                     var rolse = _user.GetRolesOwneByUser(loginInfo.UserId);
                     var userTopRole = rolse!.FirstOrDefault();
+                    string userDataInfo = userTopRole.UserRole.RoleName + "|" +
+                                          userTopRole.UserRole.RolePriority.ToString() + "|" +
+                                          userInfo.UserName + "|" +
+                                          userInfo.UserEmail;
 
                     var identity = new ClaimsIdentity(claims: new[]
-                    {
-                        new Claim(type:ClaimTypes.Name, value:userInfo.UserName),
-                        new Claim(type:ClaimTypes.Role, value:userTopRole.RoleId + "|" + userTopRole.UserRole.RoleName + "|" + userTopRole.UserRole.RolePriority.ToString())
+                     {
+                    new Claim(type:ClaimTypes.Name,
+                              value:userInfo.UserId),
+                    new Claim(type:ClaimTypes.Role,
+                              value:userTopRole.RoleId),
+                    new Claim(type:ClaimTypes.UserData,
+                              value:userDataInfo)
                     }, authenticationType: CookieAuthenticationDefaults.AuthenticationScheme);
 
-                    await _context.SignInAsync(scheme: CookieAuthenticationDefaults.AuthenticationScheme 
-                        ,principal:new ClaimsPrincipal(identities: (IEnumerable<ClaimsIdentity>)identity)
-                        ,properties: new AuthenticationProperties()
+                    await _context.SignInAsync(scheme: CookieAuthenticationDefaults.AuthenticationScheme,
+                        principal: new ClaimsPrincipal(identity: identity),
+                        properties: new AuthenticationProperties()
                     {
                         IsPersistent = loginInfo.RememberMe, // 지속 여부에 관한 옵션
                         ExpiresUtc = loginInfo.RememberMe ? DateTime.UtcNow.AddDays(7) : DateTime.UtcNow.AddMinutes(30) // 체크시 30일 아닐시 7일

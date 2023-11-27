@@ -89,13 +89,14 @@ namespace NetCore.Services.Svcs
             var userRolesByUserInfos = _dbFirstDbContext.UserRolesByUsers.Where(uru => uru.UserId.Equals(userId)).ToList();
             foreach (var role in userRolesByUserInfos)
             {
-                role.UserRole = GetUserRole(role.UserId);
+                role.UserRole = GetUserRole(role.RoleId);
             }
             return userRolesByUserInfos.OrderByDescending(uru => uru.UserRole.RolePriority);
         }
         private UserRole GetUserRole(string roleId)
         {
-            return _dbFirstDbContext.UserRoles.Where(ur => ur.RoleId.Equals(roleId)).FirstOrDefault();
+            var temp = _dbFirstDbContext.UserRoles.Where(ur => ur.RoleId.Equals(roleId)).FirstOrDefault();
+            return temp;
         }
         User IUser.GetUserInfo(string userid)
         {
