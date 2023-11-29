@@ -6,7 +6,7 @@ namespace NetCore.Data.ViewModels
     public class AESInfo
     {
         [Required(ErrorMessage = "아이디를 입력하세요.")]
-        [MinLength(6, ErrorMessage = "아이디는 6자 이상 입력하세요.")]
+        [MinLength(4, ErrorMessage = "아이디는 4자 이상 입력하세요.")]
         [Display(Name = "사용자 아이디")]
         public string? UserId { get; set; }
 

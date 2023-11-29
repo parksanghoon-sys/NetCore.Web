@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.DataProtection;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using NetCore.Data.ViewModels;
 
@@ -13,7 +14,7 @@ namespace NetCore.Web.Controllers
         }
         #region AES
         [HttpGet]
-        //[Authorize(Roles = "SuperUser, SystemUser")]
+        [Authorize(Roles = "SuperUser, SystemUser")]
         public IActionResult AES()
         {
             return View();

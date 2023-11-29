@@ -19,7 +19,7 @@ namespace NetCore.Data.ViewModels
         [DataType(DataType.Password)]
         public string? Password { get; set; }
 
-        [Display(Name ="내정보")]
+        [Display(Name = "내정보 기억")]
         public bool RememberMe { get; set; }
     }
 }

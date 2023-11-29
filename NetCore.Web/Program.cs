@@ -37,7 +37,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication(defaultScheme: CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.AccessDeniedPath = "/Membership/Forbidden";
+        options.AccessDeniedPath = "/Membership/Forbidden"; // 권한이 없을시 튀겨 나가 접속되는 페이지
         options.LogoutPath = "/Membership/Login";
     });
 builder.Services.AddAuthorization();

@@ -7,39 +7,47 @@
 <h2>@ViewData["Title"]</h2>
 <div class="row">
     <div class="col-md-4">
-        <form method="post" asp-asp-controller="Membership" asp-action="Login" onsubmit="btnLogin.disabled = true; return true;">
+        <form method="post" asp-route-reurnurl="@ViewData["ReturnUrl"]" asp-asp-controller="Membership" asp-action="Login" onsubmit="btnLogin.disabled = true; return true;">
             <h4>Use a local account to log in.</h4>
-            <hr />            
+            <hr />
             <div class="text-danger" asp-validation-summary="All"></div>
             <div class="form-group">
                 @Html.DisplayNameFor(m => m.UserId)
                 <input type="text" class="form-control" asp-for="UserId" placeholder="User id" autofocus />
                 <span class="text-danger" asp-validation-for="UserId"></span>
-            
+
             </div>
             <hr />
             <div class="form-group">
                 @Html.DisplayNameFor(m => m.Password)
-                <input type="password" class="form-control" asp-for="Password" placeholder="password"/>
+                <input type="password" class="form-control" asp-for="Password" placeholder="password" />
                 <span class="text-danger" asp-validation-for="Password"></span>
             </div>
-            <hr />
-            <div class="form-group">
-                <button type="submit" name="btnLogin" class="btn btn-lg btn-success btn-block">맴버쉽 로그인</button>
-            </div>
-            <div class="checkbox"> 
+            <div class="checkbox">
                 <label asp-for="RememberMe">
-                    <input type="checkbox" asp-for="RememberMe" placeholder="Remember me"/>
+                    <input type="checkbox" asp-for="RememberMe" placeholder="Remember me" />
                     @Html.DisplayNameFor(m => m.RememberMe)
                 </label>
                 <span class="text-danger" asp-validation-for="RememberMe"></span>
             </div>
-            <p>
-                <a asp-action="Register" asp-controller="Account">Register as a new user</a>
+            <hr />
+
+            <button type="submit" name="btnLogin" class="btn btn-lg btn-success btn-block">맴버쉽 로그인</button>
+            <p style="padding-top:10px"><a asp-route-reurnurl="@ViewData["ReturnUrl"]" asp-controller="Membership" asp-action="Register" class="btn btn-primary btn-primary">맴버쉽 사용자 가입</a></p>
+
+            @* <div class="checkbox">
+            <label asp-for="RememberMe">
+            <input type="checkbox" asp-for="RememberMe" placeholder="Remember me"/>
+            @Html.DisplayNameFor(m => m.RememberMe)
+            </label>
+            <span class="text-danger" asp-validation-for="RememberMe"></span>
+            </div>*@
+            @*<p>
+            <a asp-action="Register" asp-controller="Account">Register as a new user</a>
             </p>
             <p>
-                <a asp-action="ForgotPassword" asp-controller="Account">Forgot your password?</a>
-            </p>
+            <a asp-action="ForgotPassword" asp-controller="Account">Forgot your password?</a>
+            </p>*@
 
         </form>
     </div>
