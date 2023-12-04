@@ -18,10 +18,13 @@ namespace NetCore.Web.Controllers
     {
         private readonly IUser? _user;
         private readonly HttpContext? _context;
-        public MembershipController(IHttpContextAccessor accessor,IUser user)
+        private readonly IPasswordHasher _passwordHasher;
+        public MembershipController(IHttpContextAccessor accessor,IUser user, IPasswordHasher passwordHasher)
         {
             _context = accessor.HttpContext;
+            _passwordHasher = passwordHasher;
             _user = user;
+
         }
         #region private methods
         /// <summary>
@@ -74,8 +77,9 @@ namespace NetCore.Web.Controllers
             /// ModelState는 모델 바인딩과 모델 유효성 검사에서 발생하는 오류를 나타낸다 
             /// POST 된 이름 값 쌍을 저장하고 제출하며 각 값과 관련되 유효성 검사오류를 저장한다
             if(ModelState.IsValid)
-            {
-                if (_user.MatchTheUserInfo(loginInfo))
+            {           
+                //if (_user.MatchTheUserInfo(loginInfo))
+                if(_passwordHasher.MatchCheckTheUserInfo(loginInfo.UserId,loginInfo.Password))
                 {
                     // 신원 보증과 승인 권환
                     var userInfo = _user.GetUserInfo(loginInfo.UserId);

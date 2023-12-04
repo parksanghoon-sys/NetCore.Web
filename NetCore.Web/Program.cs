@@ -20,6 +20,7 @@ Common.SetDataProtection(builder.Services, @"D:\DataProtector\", "NetCore", Enum
 // 의존성 주입을 사용하기 위해서 서비스로 등록을 하는 시스템
 
 builder.Services.AddScoped<IUser, UserService>();
+builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 
 // 데이터베이스 접속 정보, Migration 프로젝트를 지정
 builder.Services.AddDbContext<CodeFirstDbContext>(options =>

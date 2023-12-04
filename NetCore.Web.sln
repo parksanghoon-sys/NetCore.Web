@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetCore.Migrations", "NetCo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetCore.Databases", "NetCore.Databases\NetCore.Databases.csproj", "{5A25B8DA-37B2-40F3-B50F-2D3D70DA1976}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetCore.Utilites", "NetCore.Utilites\NetCore.Utilites.csproj", "{EAEF62D2-25B4-4B66-9E86-623A8721DC25}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetCore.Utilites", "NetCore.Utilites\NetCore.Utilites.csproj", "{EAEF62D2-25B4-4B66-9E86-623A8721DC25}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetCore.Test.PasswordHasher", "NetCore.Test.PasswordHasher\NetCore.Test.PasswordHasher.csproj", "{FC603571-706E-4E16-8623-3BAE50A17750}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{EAEF62D2-25B4-4B66-9E86-623A8721DC25}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EAEF62D2-25B4-4B66-9E86-623A8721DC25}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EAEF62D2-25B4-4B66-9E86-623A8721DC25}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC603571-706E-4E16-8623-3BAE50A17750}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC603571-706E-4E16-8623-3BAE50A17750}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC603571-706E-4E16-8623-3BAE50A17750}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC603571-706E-4E16-8623-3BAE50A17750}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

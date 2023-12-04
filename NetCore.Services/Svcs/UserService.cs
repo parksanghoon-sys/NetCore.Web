@@ -30,9 +30,9 @@ namespace NetCore.Services.Svcs
             //user = _codeFirstDbContext.Users.Where(u => u.UserId.Equals(userId) && u.Password.Equals(password)).FirstOrDefault();
 
             // FromSql
-            user = _dbFirstDbContext.Users.FromSqlRaw<User>("SELECT * FROM dbo.[User]")
-                            .Where(u => u.UserId.Equals(userId) && u.Password.Equals(password))
-                           .FirstOrDefault();
+            //user = _dbFirstDbContext.Users.FromSqlRaw<User>("SELECT * FROM dbo.[User]")
+            //                .Where(u => u.UserId.Equals(userId) && u.Password.Equals(password))
+            //               .FirstOrDefault();
 
             // View
             //user = _dbFirstDbContext.Users.FromSqlRaw<User>("SELECT UserId, UserName,UserEmail,Password,IsMembershipWithdrawn,JoinedUtcDate FROM dbo.[uvwUser]")
@@ -44,9 +44,9 @@ namespace NetCore.Services.Svcs
             //                .FirstOrDefault();
 
             // STORED PROCEDURE
-            //user = _dbFirstDbContext.Users.FromSqlRaw<User>("dbo.uspCheckLoginByUserId @p0, @p1", new[] { userId, password })
-            //    .AsEnumerable().ToList().FirstOrDefault();
-            if(user == null)
+            user = _dbFirstDbContext.Users.FromSqlRaw<User>("dbo.uspCheckLoginByUserId @p0, @p1", new[] { userId, password })
+                .AsEnumerable().ToList().FirstOrDefault();
+            if (user == null)
             {
                 // 접속 실패 횟수에 대한 증가
                 int rowAffected;
