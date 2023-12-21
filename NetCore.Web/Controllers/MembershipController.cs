@@ -79,7 +79,7 @@ namespace NetCore.Web.Controllers
             if(ModelState.IsValid)
             {           
                 //if (_user.MatchTheUserInfo(loginInfo))
-                if(_passwordHasher.MatchCheckTheUserInfo(loginInfo.UserId,loginInfo.Password))
+                if(_user.MatchTheUserInfo(loginInfo))
                 {
                     // 신원 보증과 승인 권환
                     var userInfo = _user.GetUserInfo(loginInfo.UserId);
@@ -127,7 +127,31 @@ namespace NetCore.Web.Controllers
             ModelState.AddModelError(string.Empty, message);
             return View("Login",loginInfo);
         }
-
+        [HttpGet]
+        public IActionResult Register(string returnRul)
+        {
+            ViewData["ReturnUrl"] = returnRul;
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Register(RegisterInfo registerInfo, string returnRul)
+        {
+            ViewData["RetrunUrl"] = registerInfo;
+            string message = string.Empty;
+            if(ModelState.IsValid)
+            {
+                // 사용자 가입 서비스
+                TempData["Message"] = "사용자 가입이 성공적으로 이루어 졌습니다";
+                return RedirectToAction("Login", "Membership");
+            }
+            else
+            {
+                message = "사용자 가입을 위한 정보를 올바르게 입력하세요.";
+            }
+            ModelState.AddModelError(string.Empty, message);
+            return View(registerInfo);
+        }
         [HttpGet("/LogOut")]
         public async Task<IActionResult> LogOutAsync()
         {

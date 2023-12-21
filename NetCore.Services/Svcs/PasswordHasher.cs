@@ -42,7 +42,7 @@ namespace NetCore.Services.Svcs
              iterationCount: 45000, // 10000, 25000, 45000
              numBytesRequested: 256 / 8));
         }
-        private bool MatchCheckTheUserInfo(string userId, string password, string rngSalt, string guidSalt, string passwordHash)
+        private bool CheckTheUserInfo(string userId, string password, string rngSalt, string guidSalt, string passwordHash)
         {
             return GetPasswordHash(userId, password, guidSalt, rngSalt).Equals(passwordHash);
         }
@@ -62,14 +62,9 @@ namespace NetCore.Services.Svcs
             return GetPasswordHash(userId,password, guidSalt, rngSalt);
         }
 
-        bool IPasswordHasher.MatchCheckTheUserInfo(string userId, string password)
+        bool IPasswordHasher.CheckTheUserInfo(string userId, string password, string rngSalt, string guidSalt, string passwordHash)
         {
-            var user = _context.Users.Where(c => c.UserId.Equals(userId)).FirstOrDefault();
-
-            string guidSalt = user.GUIDSalt;
-            string rngSalt = user.RNGSalt;
-            string passwordHash = user.PasswordHash;
-            return MatchCheckTheUserInfo(userId, password,rngSalt, guidSalt, passwordHash);
+            return CheckTheUserInfo(userId,password,rngSalt,guidSalt,passwordHash);
         }
     }
 }

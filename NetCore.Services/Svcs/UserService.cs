@@ -7,20 +7,30 @@ using NetCore.Services.Interfaces;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Data.Entity;
 
+
 namespace NetCore.Services.Svcs
 {
     public class UserService : IUser
     {
         private  DBFirstDbContext _dbFirstDbContext;
-        private  CodeFirstDbContext _codeFirstDbContext;
-        public UserService(CodeFirstDbContext codeFirstDbContext, DBFirstDbContext dBFirstDbContext)
+        //private  CodeFirstDbContext _codeFirstDbContext;
+        private IPasswordHasher _passwordHasher;
+        public UserService(CodeFirstDbContext codeFirstDbContext, DBFirstDbContext dBFirstDbContext, IPasswordHasher passwordHasher)
         {
-            _codeFirstDbContext = codeFirstDbContext;
+            //_codeFirstDbContext = codeFirstDbContext;
             _dbFirstDbContext = dBFirstDbContext;
+            _passwordHasher = passwordHasher;
+
         }
         public bool MatchTheUserInfo(LoginInfo loginInfo)
         {
-            return checkTheUserInfo(loginInfo.UserId, loginInfo.Password);
+            var user = _dbFirstDbContext.Users.Where(c => c.UserId.Equals(loginInfo.UserId)).FirstOrDefault();
+
+            if(user == null)
+                return false;
+
+            return _passwordHasher.CheckTheUserInfo(loginInfo.UserId, loginInfo.Password, user.RNGSalt, user.GUIDSalt, user.PasswordHash);
+            //return checkTheUserInfo(loginInfo.UserId, loginInfo.Password);
         }
 
         private User GetUserInfo(string userId, string password)
