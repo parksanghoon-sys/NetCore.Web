@@ -22,6 +22,33 @@ namespace NetCore.Services.Svcs
             _passwordHasher = passwordHasher;
 
         }
+        private int RegisterUser(RegisterInfo register)
+        {
+            var utcNow = DateTime.UtcNow;
+            var passwordInfo = _passwordHasher.SetPasswordInfo(register.UserId!, register.Password!);
+            var user = new User()
+            { 
+                UserId = register.UserId,
+                UserName = register.UserName,
+                UserEmail = register.UserEmail,
+                GUIDSalt = passwordInfo.GUIDSalt,
+                RNGSalt = passwordInfo.RNGSalt,
+                PasswordHash = passwordInfo.PasswodHash,
+                AccessFailedCount = 0,
+                IsMembershipWithdrawn = false,
+                JoinedUtcDate = utcNow
+            };
+            var userRolseByUser = new UserRolesByUser()
+            {
+                UserId = register.UserId,
+                RoleId = "AssociateUser",
+                OwnedUtcDate = utcNow
+            };
+            _dbFirstDbContext.Add(user);
+            _dbFirstDbContext.Add(userRolseByUser);
+
+            return _dbFirstDbContext.SaveChanges();
+        }
         public bool MatchTheUserInfo(LoginInfo loginInfo)
         {
             var user = _dbFirstDbContext.Users.Where(c => c.UserId.Equals(loginInfo.UserId)).FirstOrDefault();
@@ -116,6 +143,11 @@ namespace NetCore.Services.Svcs
         public IEnumerable<UserRolesByUser> GetRolesOwneByUser(string userid)
         {
             return GetUserRolesByUserInfos(userid);
+        }
+
+        int IUser.RegisterUser(RegisterInfo register)
+        {
+            return RegisterUser(register);
         }
         #endregion
     }

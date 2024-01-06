@@ -8,5 +8,11 @@ namespace NetCore.Services.Interfaces
         bool MatchTheUserInfo(LoginInfo loginInfo);
         User GetUserInfo(string userid);
         IEnumerable<UserRolesByUser> GetRolesOwneByUser(string userid);
+        /// <summary>
+        /// [사용자 가입]
+        /// </summary>
+        /// <param name="register">사용자 가입용 뷰모델</param>
+        /// <returns></returns>
+        int RegisterUser(RegisterInfo register);
     }
 }

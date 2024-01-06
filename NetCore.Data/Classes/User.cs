@@ -16,6 +16,6 @@ namespace NetCore.Data.Classes
         public System.DateTime JoinedUtcDate { get; set; }        
         
 
-        public virtual ICollection<UserRolesByUser> UserRolesByUsers { get; set; }
+        public virtual ICollection<UserRolesByUser>? UserRolesByUsers { get; set; }
     }
 }

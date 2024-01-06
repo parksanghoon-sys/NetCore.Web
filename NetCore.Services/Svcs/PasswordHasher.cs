@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using NetCore.Services.Bridges;
 using NetCore.Services.Data;
 using NetCore.Services.Interfaces;
 using System;
@@ -46,6 +47,18 @@ namespace NetCore.Services.Svcs
         {
             return GetPasswordHash(userId, password, guidSalt, rngSalt).Equals(passwordHash);
         }
+        private PasswodHashInfo SetPasswordInfo(string userId, string password)
+        {
+            string guidSalt = GetGUIDSalt();
+            string rngSalt = GetRNGSalt();
+            var passwodInfo = new PasswodHashInfo()
+            {
+                GUIDSalt = guidSalt,
+                RNGSalt = rngSalt,
+                PasswodHash = GetPasswordHash(userId, password, guidSalt, rngSalt)
+            };
+            return passwodInfo;
+        }
         #endregion
         string IPasswordHasher.GetGUIDSalt()
         {
@@ -65,6 +78,11 @@ namespace NetCore.Services.Svcs
         bool IPasswordHasher.CheckTheUserInfo(string userId, string password, string rngSalt, string guidSalt, string passwordHash)
         {
             return CheckTheUserInfo(userId,password,rngSalt,guidSalt,passwordHash);
+        }
+
+        PasswodHashInfo IPasswordHasher.SetPasswordInfo(string userId, string password)
+        {
+            return SetPasswordInfo(userId,password);
         }
     }
 }

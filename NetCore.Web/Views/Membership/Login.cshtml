@@ -5,6 +5,7 @@
 }
 
 <h2>@ViewData["Title"]</h2>
+<div class="text-info">@Html.Raw(TempData["Message"])</div>
 <div class="row">
     <div class="col-md-4">
         <form method="post" asp-route-reurnurl="@ViewData["ReturnUrl"]" asp-asp-controller="Membership" asp-action="Login" onsubmit="btnLogin.disabled = true; return true;">

@@ -128,22 +128,31 @@ namespace NetCore.Web.Controllers
             return View("Login",loginInfo);
         }
         [HttpGet]
-        public IActionResult Register(string returnRul)
+        [AllowAnonymous]
+        public IActionResult Register(string? returnUrl)
         {
-            ViewData["ReturnUrl"] = returnRul;
+            ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Register(RegisterInfo registerInfo, string returnRul)
+        [AllowAnonymous]
+        public IActionResult Register(RegisterInfo registerInfo, string? returnUrl)
         {
             ViewData["RetrunUrl"] = registerInfo;
             string message = string.Empty;
             if(ModelState.IsValid)
             {
-                // 사용자 가입 서비스
-                TempData["Message"] = "사용자 가입이 성공적으로 이루어 졌습니다";
-                return RedirectToAction("Login", "Membership");
+                if(_user!.RegisterUser(registerInfo) > 0)
+                {
+                    // 사용자 가입 서비스
+                    TempData["Message"] = "사용자 가입이 성공적으로 이루어 졌습니다";
+                    return RedirectToAction("Login", "Membership");
+                }
+                else
+                {
+                    message = "사용자 가입가 가입되지 않았습니다..";
+                }
             }
             else
             {

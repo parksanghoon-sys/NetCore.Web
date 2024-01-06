@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NetCore.Services.Bridges;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,13 @@ namespace NetCore.Services.Interfaces
         string GetRNGSalt();
         string GetPasswordHash(string userId, string password, string guidSalt, string rngSalt);
         //bool MatchCheckTheUserInfo(string userId, string password);
-        bool CheckTheUserInfo(string userId, string password, string rngSalt, string guidSalt, string passwordHash)
+        bool CheckTheUserInfo(string userId, string password, string rngSalt, string guidSalt, string passwordHash);
+        /// <summary>
+        /// [사용자 가입] 비밀번호 정보 지정
+        /// </summary>
+        /// <param name="userId">아이디</param>
+        /// <param name="password">비밀번호</param>
+        /// <returns></returns>
+        PasswodHashInfo SetPasswordInfo(string userId, string password);
     }
 }
