@@ -22,13 +22,27 @@ namespace NetCore.Services.Svcs
             _passwordHasher = passwordHasher;
 
         }
+        
+        private bool MatchTheUserInfo(LoginInfo loginInfo)
+        {
+            var user = _dbFirstDbContext.Users.Where(c => c.UserId.Equals(loginInfo.UserId)).FirstOrDefault();
+
+            if(user == null)
+                return false;
+
+            return _passwordHasher.CheckTheUserInfo(loginInfo.UserId, loginInfo.Password, user.RNGSalt, user.GUIDSalt, user.PasswordHash);
+            //return checkTheUserInfo(loginInfo.UserId, loginInfo.Password);
+        }
+
+        #region PrivateMethods
+        // UserId 에 대해 대소문자 처리
         private int RegisterUser(RegisterInfo register)
         {
             var utcNow = DateTime.UtcNow;
             var passwordInfo = _passwordHasher.SetPasswordInfo(register.UserId!, register.Password!);
             var user = new User()
-            { 
-                UserId = register.UserId,
+            {
+                UserId = register.UserId!.ToLower(),
                 UserName = register.UserName,
                 UserEmail = register.UserEmail,
                 GUIDSalt = passwordInfo.GUIDSalt,
@@ -40,7 +54,7 @@ namespace NetCore.Services.Svcs
             };
             var userRolseByUser = new UserRolesByUser()
             {
-                UserId = register.UserId,
+                UserId = register.UserId.ToLower(),
                 RoleId = "AssociateUser",
                 OwnedUtcDate = utcNow
             };
@@ -49,17 +63,44 @@ namespace NetCore.Services.Svcs
 
             return _dbFirstDbContext.SaveChanges();
         }
-        public bool MatchTheUserInfo(LoginInfo loginInfo)
+        private UserInfo GetUserInfoForUpdate(string userId)
         {
-            var user = _dbFirstDbContext.Users.Where(c => c.UserId.Equals(loginInfo.UserId)).FirstOrDefault();
-
-            if(user == null)
-                return false;
-
-            return _passwordHasher.CheckTheUserInfo(loginInfo.UserId, loginInfo.Password, user.RNGSalt, user.GUIDSalt, user.PasswordHash);
-            //return checkTheUserInfo(loginInfo.UserId, loginInfo.Password);
+            var user = GetUserInfo(userId);
+            var userInfo = new UserInfo()
+            {
+                UserId = null,
+                UserName = user.UserName,
+                UserEmail = user.UserEmail,
+                ChangeInfo = new ChangeInfo()
+                {
+                    UserEmail = user.UserEmail,
+                    UserName = user.UserName
+                }
+            };
+            return userInfo;
         }
+        private int UpdateUser(UserInfo user)
+        {                       
+            var userInfo = _dbFirstDbContext.Users.Where(c => c.UserId.Equals(user.UserId)).FirstOrDefault();
 
+            if(userInfo == null)
+                return 0;
+
+            bool check = _passwordHasher.CheckTheUserInfo(user.UserId, user.Password, userInfo.RNGSalt, userInfo.GUIDSalt, userInfo.PasswordHash);
+            int rowAffected = 0;
+            if (check)
+            {                
+                _dbFirstDbContext.Update(userInfo);
+                userInfo.UserName = user.UserName;
+                userInfo.UserEmail = user.UserEmail;
+                rowAffected = _dbFirstDbContext.SaveChanges();
+            }
+            return rowAffected;
+        }
+        private bool CompareInfo(UserInfo userInfo)
+        {
+            return userInfo.ChangeInfo.Equals(userInfo);
+        }
         private User GetUserInfo(string userId, string password)
         {
             User user = null;
@@ -90,26 +131,15 @@ namespace NetCore.Services.Svcs
                 // SQL 문 직접 작성
                 //rowAffected = _dbFirstDbContext.Database.ExecuteSqlInterpolated($"Update dbo.[User] Set AccessFailedCount +=1 WHERE UserId={userId}");
                 // STORED PROCEDURE
-                rowAffected = _dbFirstDbContext.Database.ExecuteSqlRaw($"dbo.FailedLoginByUserId @p0",parameters: new[] {userId});
+                rowAffected = _dbFirstDbContext.Database.ExecuteSqlRaw($"dbo.FailedLoginByUserId @p0", parameters: new[] { userId });
 
             }
 
             return user;
         }
-        #region private methods
+
         private IEnumerable<User> GetUserInfos()
         {
-            //return new List<User>()
-            //{
-            //    new User()
-            //    {
-            //        UserId = "jadejs",
-            //        UserName ="박상훈",
-            //        UserEmail = "power@naver.com",
-            //        Password = "123456"
-            //    }
-            //};
-            //return _codeFirstDbContext.Users.ToList();
             return _dbFirstDbContext.Users.ToList();
         }
         private bool checkTheUserInfo(string userid, string password)
@@ -134,7 +164,10 @@ namespace NetCore.Services.Svcs
         {
             var temp = _dbFirstDbContext.UserRoles.Where(ur => ur.RoleId.Equals(roleId)).FirstOrDefault();
             return temp;
-        }
+        } 
+        #endregion
+        #region Interface methods
+
         User IUser.GetUserInfo(string userid)
         {
             return GetUserInfo(userid);
@@ -148,6 +181,26 @@ namespace NetCore.Services.Svcs
         int IUser.RegisterUser(RegisterInfo register)
         {
             return RegisterUser(register);
+        }
+
+        UserInfo IUser.GetUserInfoForUpdate(string userId)
+        {
+            return GetUserInfoForUpdate(userId);
+        }
+
+        bool IUser.MatchTheUserInfo(LoginInfo loginInfo)
+        {
+            return MatchTheUserInfo(loginInfo);
+        }
+
+        int IUser.UpdateUser(UserInfo user)
+        {
+            return UpdateUser(user);
+        }
+
+        bool IUser.CompareInfo(UserInfo userInfo)
+        {
+            return CompareInfo(userInfo);
         }
         #endregion
     }
