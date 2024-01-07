@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using NetCore.Services.Data;
 using NetCore.Services.Interfaces;
@@ -18,6 +17,7 @@ builder.Services.AddControllersWithViews();
 Common.SetDataProtection(builder.Services, @"D:\DataProtector\", "NetCore", Enums.CryptoType.CngCbc);
 // IUser 인터페이스에 UserService 클래스 인스턴스를 주입
 // 의존성 주입을 사용하기 위해서 서비스로 등록을 하는 시스템
+builder.Services.AddScoped<DBFirstDbInitalizer>();
 
 builder.Services.AddScoped<IUser, UserService>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
@@ -71,4 +71,11 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+using (var scope = app.Services.CreateScope())
+{
+    var initializer = scope.ServiceProvider.GetService<DBFirstDbInitalizer>()!;
+
+    var success = initializer.PlantSeedData();    
+}
 app.Run();
+

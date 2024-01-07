@@ -4,8 +4,6 @@ using NetCore.Services.Data;
 using NetCore.Data.Classes;
 //using NetCore.Data.DataModels;
 using NetCore.Services.Interfaces;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.Data.Entity;
 
 
 namespace NetCore.Services.Svcs

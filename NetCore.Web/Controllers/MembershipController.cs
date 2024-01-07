@@ -2,11 +2,9 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using Microsoft.Extensions.Primitives;
 using NetCore.Data.ViewModels;
 using NetCore.Services.Interfaces;
-using NuGet.Protocol.Plugins;
 using System.Security.Claims;
 
 namespace NetCore.Web.Controllers
