@@ -15,9 +15,18 @@
 }
 <h2>@ViewData["Title"]</h2>
 <div class="text-info">@Html.Raw(TempData["Message"])</div>
+
+<div class="text-danger">@Html.Raw(ViewData["Message"])</div>
+
 @if (Context.User.Identity.IsAuthenticated)
 {
     <div class="text-danger">@($"{userId}({userRoleInfo[2]})님의 권환은 {userRoleId} ({userRoleInfo[0]}) 입니다.")</div>
     <a asp-controller="Membership" asp-action="LogOut" class="btn btn-primary">맴버쉽 로그아웃</a>
+
+    <form method="post" asp-controller="Membership" asp-action="Withdrawn" onsubmit="btnWithdrawn.disabled = true; return true;">
+        <input type="hidden" name="UserId" placeholder="User Id" value="@Context.User.Identity.Name"/>
+        <input type="password" name="Password" placeholder="Passord" value="" autofocus/>
+        <button type="submit" name="btnWithdrawn" class="btn btn-success">멤버십 사용자 탈퇴</button>
+    </form>
 }
 @*Html.Raw를 해줘야 HTML 태그가 적용가능*@

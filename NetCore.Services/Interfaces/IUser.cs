@@ -30,5 +30,11 @@ namespace NetCore.Services.Interfaces
         /// <param name="userInfo">사용자 정보 뷰모델</param>
         /// <returns></returns>
         bool CompareInfo(UserInfo userInfo);
+        /// <summary>
+        /// 사용자 탈퇴
+        /// </summary>
+        /// <param name="user">사용자 탈퇴정보 viewmodel</param>
+        /// <returns></returns>
+        int WithdrawnUser(WithdrawnInfo user);
     }
 }

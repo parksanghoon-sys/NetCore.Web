@@ -165,6 +165,23 @@ namespace NetCore.Services.Svcs
             var temp = _dbFirstDbContext.UserRoles.Where(ur => ur.RoleId.Equals(roleId)).FirstOrDefault();
             return temp;
         } 
+        private int WithdrawnUser(WithdrawnInfo user)
+        {
+            var userInfo = _dbFirstDbContext.Users.Where(c => c.UserId.Equals(user.UserId)).FirstOrDefault();
+
+            if (userInfo == null)
+                return 0;
+
+            bool check = _passwordHasher.CheckTheUserInfo(user.UserId, user.Password, userInfo.RNGSalt, userInfo.GUIDSalt, userInfo.PasswordHash);
+            
+            if (check)
+            {
+                _dbFirstDbContext.Remove(userInfo);
+                var rowAffected = _dbFirstDbContext.SaveChangesAsync();
+                return rowAffected.Result;
+            }
+            return 0;
+        }
         #endregion
         #region Interface methods
 
@@ -201,6 +218,11 @@ namespace NetCore.Services.Svcs
         bool IUser.CompareInfo(UserInfo userInfo)
         {
             return CompareInfo(userInfo);
+        }
+
+        int IUser.WithdrawnUser(WithdrawnInfo user)
+        {
+            return WithdrawnUser(user);
         }
         #endregion
     }

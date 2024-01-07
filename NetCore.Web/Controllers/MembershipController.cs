@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using Microsoft.Extensions.Primitives;
 using NetCore.Data.ViewModels;
 using NetCore.Services.Interfaces;
@@ -45,7 +46,7 @@ namespace NetCore.Web.Controllers
         }
         #endregion
         
-        [AllowAnonymous]
+        [AllowAnonymous]        
         public IActionResult Index()
         {
             return View();
@@ -200,14 +201,44 @@ namespace NetCore.Web.Controllers
             ModelState.AddModelError(string.Empty, message);
             return View(user);
         }
-        [HttpGet("/LogOut")]
+        [HttpGet("/{controller}/LogOut")]
         public async Task<IActionResult> LogOutAsync()
         {
             await _context.SignOutAsync(scheme: CookieAuthenticationDefaults.AuthenticationScheme);
             TempData["Message"] = "Logout Sucess <br/> 웹사이트를 원활히 이용하시려면 로그인 하세요.";
             return RedirectToAction("Index", "Membership");
         }
+        [HttpPost("/{controller}/Withdrawn")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> WithdrawnAsync(WithdrawnInfo withdrawn)
+        {
+            string message = string.Empty;
 
+            if (ModelState.IsValid)
+            {
+                //탈퇴 서비스
+                if (_user.WithdrawnUser(withdrawn) > 0)
+                {
+                    TempData["Message"] = "사용자 탈퇴가 성공적으로 이루어졌습니다.";
+
+                    await _context.SignOutAsync(scheme: CookieAuthenticationDefaults.AuthenticationScheme);
+
+                    return RedirectToAction("Index", "Membership");
+                }
+                else
+                {
+                    message = "사용자가 탈퇴처리되지 않았습니다.";
+                }
+
+            }
+            else
+            {
+                message = "사용자가 탈퇴하기 위한 정보를 올바르게 입력하세요.";
+            }
+
+            ViewData["Message"] = message;
+            return View("Index", withdrawn);
+        }
         [HttpGet("/Forbidden")]             
         public IActionResult Forbidden()
         {
