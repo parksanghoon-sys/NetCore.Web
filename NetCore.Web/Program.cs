@@ -61,8 +61,18 @@ builder.Services.AddAuthentication(defaultScheme: CookieAuthenticationDefaults.A
         options.LogoutPath = "/Membership/Login";
     });
 builder.Services.AddAuthorization();
+
 builder.Services.AddHttpContextAccessor();
 
+builder.Services.AddDistributedMemoryCache();
+
+builder.Services.AddSession(options =>
+{
+    // Sesstion Name
+    options.Cookie.Name = ".NetCoreSession"; 
+    // Session Timeout
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+});
 #endregion
 
 var app = builder.Build();
@@ -85,6 +95,9 @@ app.UseAuthentication();
 
 // 승인권한을 사용하기 위해 추가됨.
 app.UseAuthorization();
+
+// 세션 지정 MVC 등록 전에 해야함
+app.UseSession();
 
 app.MapControllerRoute(
     name: "default",
