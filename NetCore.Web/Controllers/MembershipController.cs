@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using NetCore.Data.ViewModels;
 using NetCore.Services.Interfaces;
+using System.Reflection;
 using System.Security.Claims;
 
 namespace NetCore.Web.Controllers
@@ -237,13 +238,15 @@ namespace NetCore.Web.Controllers
             ViewData["Message"] = message;
             return View("Index", withdrawn);
         }
-        [HttpGet("/Forbidden")]             
-        public IActionResult Forbidden()
+        [HttpGet]             
+        public IActionResult Forbidden([FromServices]ILogger<MembershipController> logger)
         {
             StringValues paramReturnUrl;
             bool exists = _context.Request.Query.TryGetValue("returnUrl", out paramReturnUrl);
             paramReturnUrl = exists ? _context.Request.Host.Value + paramReturnUrl[0] : string.Empty;
 
+
+            logger.LogInformation($"{MethodBase.GetCurrentMethod()!.Name}권한이 없는 사람이 페이지에 접근 에러 , returlUrl : {paramReturnUrl}");
             ViewData["Message"] = $"귀하는 {paramReturnUrl} 경로로 접근하려고 했습니다 만 <br/>" +
                                    "인증된 사용자도 접근하지 못하는 페이지가 있습니다 <br/>" +
                                    "담당자에게 해당 페이지의 접근권한에 대해 문의하세요";

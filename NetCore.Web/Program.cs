@@ -1,12 +1,24 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using NetCore.Services.Data;
 using NetCore.Services.Interfaces;
 using NetCore.Services.Svcs;
 using NetCore.Utilites.Utils;
+using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Host.ConfigureLogging(logBuilder =>
+{
+    logBuilder.AddFile(options =>
+    {
+        options.LogDirectory = "Logs"; // Log 저장 폴더
+        options.FileName = "log-";  // Log 파일 접두어
+        options.FileSizeLimit = null;   //로그 파일 사이즈 제한 (10MB)
+        options.RetainedFileCountLimit = null; // 로그 파일 보유 갯수 (2)
+    });
+});
 string defaultConnString = builder.Configuration.GetConnectionString(name:"DefaultConnection");
 string dbFirstConnString = builder.Configuration.GetConnectionString(name: "DBFirstDBConnection");
 // Add services to the container.
@@ -18,6 +30,13 @@ Common.SetDataProtection(builder.Services, @"D:\DataProtector\", "NetCore", Enum
 // IUser 인터페이스에 UserService 클래스 인스턴스를 주입
 // 의존성 주입을 사용하기 위해서 서비스로 등록을 하는 시스템
 builder.Services.AddScoped<DBFirstDbInitalizer>();
+// Logging 
+builder.Services.AddLogging(logBuilder =>
+{
+    logBuilder.AddConfiguration(builder.Configuration.GetSection(key: "Logging"));
+    logBuilder.AddConsole();
+    logBuilder.AddDebug();
+});
 
 builder.Services.AddScoped<IUser, UserService>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
